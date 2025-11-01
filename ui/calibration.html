@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calibration - Oxygen Monitor</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script>
+        function selectGas(gasType) {
+            // Remove selected class from all buttons
+            document.querySelectorAll('.calibration-button').forEach(button => {
+                button.classList.remove('selected');
+            });
+            
+            // Add selected class to clicked button
+            event.target.closest('.calibration-button').classList.add('selected');
+            
+            // Show save button
+            const saveButton = document.querySelector('.save-button');
+            saveButton.style.display = 'block';
+            
+            // Store selection (you can implement actual calibration logic here)
+            console.log('Selected gas:', gasType);
+        }
+
+        function goHome() {
+            window.location.href = 'index.html';
+        }
+
+        function saveSettings() {
+            // Get selected gas type
+            const selectedButton = document.querySelector('.calibration-button.selected');
+            const gasType = selectedButton ? selectedButton.textContent.includes('Oxygen') ? 'oxygen' : 'nitrogen' : null;
+            
+            if (gasType) {
+                // Here you can implement actual save logic
+                console.log('Saved settings:', gasType);
+                // Redirect to success page
+                window.location.href = 'success.html';
+            } else {
+                alert('Please select a calibration gas first!');
+            }
+        }
+
+        function downloadHTML() {
+            // Capture the UI background as an image
+            const element = document.querySelector('.ui-background');
+            
+            html2canvas(element, {
+                backgroundColor: '#0a0a0a',
+                scale: 1,
+                useCORS: true,
+                allowTaint: true,
+                logging: false,
+                width: 800,
+                height: 480,
+                scrollX: 0,
+                scrollY: 0
+            }).then(canvas => {
+                // Create download link
+                const link = document.createElement('a');
+                link.download = 'oxygen_monitor_calibration.png';
+                link.href = canvas.toDataURL('image/png');
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            }).catch(err => {
+                console.error('Error capturing image:', err);
+                alert('Error capturing image: ' + err.message);
+            });
+        }
+    </script>
+</head>
+<body>
+    <div class="ui-background">
+        <div class="home-icon" onclick="goHome()">🏠</div>
+        <h1 class="heading">Calibration</h1>
+        
+        <div class="calibration-container">
+            <div class="calibration-title">Select Calibration Gas</div>
+            
+            <div class="button-container">
+                <div class="calibration-button" onclick="selectGas('oxygen')">
+                    <div class="button-title">Pure Oxygen</div>
+                    <div class="button-subtitle">O₂ - 100%</div>
+                </div>
+                
+                <div class="calibration-button" onclick="selectGas('nitrogen')">
+                    <div class="button-title">Pure Nitrogen</div>
+                    <div class="button-subtitle">O₂ - 0%</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="powered-by">Powered By <strong>ZakBee Technologies</strong></div>
+        <button class="save-button" onclick="saveSettings()" style="display: block;">Save Settings</button>
+    </div>
+    
+    <a href="#" class="download-button" onclick="downloadHTML()">Download Image</a>
+</body>
+</html>

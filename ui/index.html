@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Oxygen Monitor</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script>
+        function downloadHTML() {
+            // Capture the UI background as an image
+            const element = document.querySelector('.ui-background');
+            
+            html2canvas(element, {
+                backgroundColor: '#0a0a0a',
+                scale: 1,
+                useCORS: true,
+                allowTaint: true,
+                logging: false,
+                width: 800,
+                height: 480,
+                scrollX: 0,
+                scrollY: 0
+            }).then(canvas => {
+                // Create download link
+                const link = document.createElement('a');
+                link.download = 'oxygen_monitor.png';
+                link.href = canvas.toDataURL('image/png');
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            }).catch(err => {
+                console.error('Error capturing image:', err);
+                alert('Error capturing image: ' + err.message);
+            });
+        }
+
+        function saveData() {
+            // Get current oxygen reading
+            const oxygenValue = document.querySelector('.oxygen-value').textContent;
+            const timestamp = new Date().toLocaleString();
+            
+            // Create data object
+            const data = {
+                oxygenLevel: oxygenValue,
+                timestamp: timestamp,
+                unit: '%'
+            };
+            
+            // Save to localStorage (you can implement actual save logic here)
+            localStorage.setItem('oxygenData', JSON.stringify(data));
+            alert(`Data saved! Oxygen: ${oxygenValue}% at ${timestamp}`);
+            console.log('Saved data:', data);
+        }
+    </script>
+</head>
+<body>
+    <div class="ui-background">
+        <h1 class="heading">Oxygen Monitor</h1>
+        <div class="settings-icon" onclick="window.location.href='calibration.html'">⚙️</div>
+        
+        <div class="oxygen-display">
+            <div class="oxygen-value">22.5</div>
+            <div class="oxygen-unit">%</div>
+        </div>
+        
+        <div class="powered-by">Powered By <strong>ZakBee Technologies</strong></div>
+    </div>
+    
+    <a href="#" class="download-button" onclick="downloadHTML()">Download Image</a>
+</body>
+</html>

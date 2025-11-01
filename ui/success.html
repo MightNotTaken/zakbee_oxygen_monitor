@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Success - Oxygen Monitor</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script>
+        function goHome() {
+            window.location.href = 'index.html';
+        }
+
+        function goBack() {
+            window.location.href = 'calibration.html';
+        }
+
+        function downloadSuccess() {
+            // Capture the UI background as an image
+            const element = document.querySelector('.ui-background');
+            
+            html2canvas(element, {
+                backgroundColor: '#0a0a0a',
+                scale: 1,
+                useCORS: true,
+                allowTaint: true,
+                logging: false,
+                width: 800,
+                height: 480,
+                scrollX: 0,
+                scrollY: 0
+            }).then(canvas => {
+                // Create download link
+                const link = document.createElement('a');
+                link.download = 'oxygen_monitor_success.png';
+                link.href = canvas.toDataURL('image/png');
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            }).catch(err => {
+                console.error('Error capturing image:', err);
+                alert('Error capturing image: ' + err.message);
+            });
+        }
+    </script>
+</head>
+<body>
+    <div class="ui-background">
+        <div class="home-icon" onclick="goHome()">🏠</div>
+        <h1 class="heading">Success</h1>
+        
+        <div class="success-container">
+            <div class="success-icon">✅</div>
+            <div class="success-title">Calibration Saved!</div>
+            <div class="success-message">Your calibration settings have been successfully saved.</div>
+            
+            <div class="success-button-container">
+                <button class="action-button" onclick="goBack()">Back to Calibration</button>
+                <button class="action-button primary" onclick="goHome()">Go to Home</button>
+            </div>
+        </div>
+        
+        <div class="powered-by">Powered By <strong>ZakBee Technologies</strong></div>
+    </div>
+    
+    <a href="#" class="download-button" onclick="downloadSuccess()">Download Success Image</a>
+</body>
+</html>
